@@ -1,13 +1,5 @@
 from django.conf import settings
 
-class GetTokenMixin:
-    """
-    Mixin to read token.
-    トークンを読み取ります
-    """
-    def get_token(self, serializer):
-        token = serializer.validated_data
-        return token
 
 class SetAccessTokenMixin:
     """
@@ -41,6 +33,7 @@ class SetAccessTokenMixin:
         self.set_access_token(response, token)
         return response
 
+
 class SetRefreshTokenMixin:
     """
     Mixin to set refresh token to cookie securly.
@@ -72,6 +65,7 @@ class SetRefreshTokenMixin:
         token = self.get_token(serializer)
         self.set_refresh_token(response, token)
         return response
+
 
 class SetTokenMixin(SetAccessTokenMixin, SetRefreshTokenMixin):
     """

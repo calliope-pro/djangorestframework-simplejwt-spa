@@ -1,6 +1,8 @@
 from django.conf import settings
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework_simplejwt.serializers import (
     TokenObtainPairSerializer,
@@ -9,7 +11,8 @@ from rest_framework_simplejwt.serializers import (
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.views import TokenViewBase
 
-from .mixin import GetTokenMixin, SetTokenMixin
+from .mixin import SetTokenMixin
+from .authentications import CustomJWTAuthentication
 
 
 class SPATokenViewBase(TokenViewBase):
@@ -38,6 +41,26 @@ class SPATokenViewBase(TokenViewBase):
 
         response = self.make_response(serializer=serializer)
         return response
+    
+    def get_data(self, request):
+        data = request.data
+        return data
+
+    def get_token(self, serializer):
+        token = serializer.validated_data
+        return token
+
+    def make_response(self, serializer):
+        response = Response(self.success_message, status=status.HTTP_200_OK)
+        return response
+
+
+class SPATokenObtainPairView(SetTokenMixin, SPATokenViewBase):
+    """
+    You will set token to cookie securly.
+    クッキーにトークンを安全に保存します
+    """
+    serializer_class = TokenObtainPairSerializer
 
     def get_data(self, request):
         access = request.COOKIES.get(self.accuess_token_cookie_key, None)
@@ -49,34 +72,8 @@ class SPATokenViewBase(TokenViewBase):
         }
         return data
 
-    def make_response(self, serializer):
-        response = Response(self.success_message, status=status.HTTP_200_OK)
-        return response
 
-class SPATokenView(GetTokenMixin, SPATokenViewBase):
-    """
-    You will use the serialized token with get_token()
-    get_token()を用いてシリアライズされたトークンを用いることが出来ます
-    """
-    pass
-
-class SPATokenObtainPairView(SetTokenMixin, SPATokenView):
-    """
-    You will set token to cookie securly
-    クッキーにトークンを安全に保存します
-    """
-    serializer_class = TokenObtainPairSerializer
-
-class SPATokenFormObtainPairView(SPATokenObtainPairView):
-    """
-    You will set token to cookie securly with password, username, and so on
-    passwordやusernameなどを用いてクッキーにトークンを安全に保存します
-    """
-    def get_data(self, request):
-        data = request.data
-        return data
-
-class SPATokenRefreshView(SetTokenMixin, SPATokenView):
+class SPATokenRefreshView(SetTokenMixin, SPATokenViewBase):
     """
     You will refresh your access token.
     アクセストークンを更新します
@@ -92,3 +89,14 @@ class SPATokenRefreshView(SetTokenMixin, SPATokenView):
         if api_settings.ROTATE_REFRESH_TOKENS:
             self.set_refresh_token(response, token)
         return response
+
+class SPAVerifyAuthView(APIView):
+    """
+    You will verify if token is valid.
+    tokenが有効か検証します
+    """
+    authentication_classes = (CustomJWTAuthentication, )
+    permission_classes = (IsAuthenticated, )
+    
+    def post(self, request, *args, **kwargs):
+        return Response('OK', status=status.HTTP_200_OK)

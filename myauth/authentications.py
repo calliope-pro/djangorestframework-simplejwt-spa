@@ -8,7 +8,7 @@ class CustomJWTAuthentication(JWTAuthentication):
     You will be authenticated with headers or cookie.
     ヘッダーでもcookieでも認証します
     """
-    def authenticate(self, request: HttpRequest):
+    def authenticate(self, request):
         """
         first, try headers, then try cookie.
         初めにヘッダー、次にクッキーを試します
