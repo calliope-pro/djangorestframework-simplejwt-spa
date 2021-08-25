@@ -98,6 +98,9 @@ class SPAVerifyAuthView(APIView):
     """
     authentication_classes = (CustomJWTAuthentication, )
     permission_classes = (IsAuthenticated, )
-    
+
+    def get(self, request, *args, **kwargs):
+        return Response('OK', status=status.HTTP_200_OK)
+
     def post(self, request, *args, **kwargs):
         return Response('OK', status=status.HTTP_200_OK)
