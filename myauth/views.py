@@ -62,16 +62,6 @@ class SPATokenObtainPairView(SetTokenMixin, SPATokenViewBase):
     """
     serializer_class = TokenObtainPairSerializer
 
-    def get_data(self, request):
-        access = request.COOKIES.get(self.accuess_token_cookie_key, None)
-        refresh = request.COOKIES.get(self.refresh_token_cookie_key, None)
-
-        data = {
-            'access': access,
-            'refresh': refresh
-        }
-        return data
-
 
 class SPATokenRefreshView(SetTokenMixin, SPATokenViewBase):
     """
@@ -82,6 +72,16 @@ class SPATokenRefreshView(SetTokenMixin, SPATokenViewBase):
     """
     serializer_class = TokenRefreshSerializer
 
+    def get_data(self, request):
+        access = request.COOKIES.get(self.accuess_token_cookie_key, None)
+        refresh = request.COOKIES.get(self.refresh_token_cookie_key, None)
+
+        data = {
+            'access': access,
+            'refresh': refresh
+        }
+        return data
+
     def make_response(self, serializer):
         response = super().make_response(serializer)
         token = self.get_token(serializer)
@@ -89,6 +89,7 @@ class SPATokenRefreshView(SetTokenMixin, SPATokenViewBase):
         if api_settings.ROTATE_REFRESH_TOKENS:
             self.set_refresh_token(response, token)
         return response
+
 
 class SPAVerifyAuthView(APIView):
     """
