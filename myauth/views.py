@@ -16,8 +16,10 @@ class SPATokenViewBase(TokenViewBase):
     """
     This ViewBase is extended rest_framework_simplejwt.views.TokenViewBase.
     rest_framework_simplejwt.views.TokenViewBaseを継承したViewBaseです
-    Validate the token data and return a just message response with HTTP_200_OK.
-    クッキーのトークンデータをバリデートし、メッセージとHTTP_200_OKレスポンスを返します
+    You have to either include a serializer_class attribute, or override the get_serializer_class() method.
+    serializer_class属性、またはget_serializer_class()を設定してください
+    Validate the token data and return a just message response with HTTP_200_OK when validated successfully.
+    クッキーのトークンデータをバリデートし、成功したらメッセージとHTTP_200_OKレスポンスを返します
     """
     success_message = 'OK'
     
@@ -51,21 +53,21 @@ class SPATokenViewBase(TokenViewBase):
         response = Response(self.success_message, status=status.HTTP_200_OK)
         return response
 
-class SPATokenView(SPATokenViewBase, GetTokenMixin):
+class SPATokenView(GetTokenMixin, SPATokenViewBase):
     """
     You will use the serialized token with get_token()
     get_token()を用いてシリアライズされたトークンを用いることが出来ます
     """
     pass
 
-class SPATokenObtainPairView(SPATokenView, SetTokenMixin):
+class SPATokenObtainPairView(SetTokenMixin, SPATokenView):
     """
     You will set token to cookie securly
     クッキーにトークンを安全に保存します
     """
     serializer_class = TokenObtainPairSerializer
 
-class SPATokenFirstObtainPairView(SPATokenObtainPairView):
+class SPATokenFormObtainPairView(SPATokenObtainPairView):
     """
     You will set token to cookie securly with password, username, and so on
     passwordやusernameなどを用いてクッキーにトークンを安全に保存します
@@ -74,7 +76,7 @@ class SPATokenFirstObtainPairView(SPATokenObtainPairView):
         data = request.data
         return data
 
-class SPATokenRefreshView(SPATokenView, SetTokenMixin):
+class SPATokenRefreshView(SetTokenMixin, SPATokenView):
     """
     You will refresh your access token.
     アクセストークンを更新します
