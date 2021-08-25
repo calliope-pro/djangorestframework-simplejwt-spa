@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.http.request import HttpRequest
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
