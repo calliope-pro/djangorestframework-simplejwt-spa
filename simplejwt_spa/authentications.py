@@ -3,7 +3,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import InvalidToken
 
 
-class CustomJWTAuthentication(JWTAuthentication):
+class SPAJWTAuthentication(JWTAuthentication):
     """
     You will be authenticated with headers or cookie.
     ヘッダーでもcookieでも認証します

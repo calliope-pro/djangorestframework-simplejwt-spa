@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class MyauthConfig(AppConfig):
+class SimplejwtSpaConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'myauth'
+    name = 'simplejwt_spa'

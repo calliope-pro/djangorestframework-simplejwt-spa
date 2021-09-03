@@ -11,7 +11,7 @@ from rest_framework_simplejwt.serializers import (
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.views import TokenViewBase
 
-from .authentications import CustomJWTAuthentication
+from .authentications import SPAJWTAuthentication
 from .mixin import SetTokenMixin
 
 
@@ -96,7 +96,7 @@ class SPAVerifyAuthView(APIView):
     You will verify if token is valid.
     tokenが有効か検証します
     """
-    authentication_classes = (CustomJWTAuthentication, )
+    authentication_classes = (SPAJWTAuthentication, )
     permission_classes = (IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):

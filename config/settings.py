@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
 
-    'myauth',
+    'simplejwt_spa',
 ]
 
 MIDDLEWARE = [
@@ -143,7 +143,7 @@ CORS_ALLOWED_ORIGINS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'myauth.authentications.CustomJWTAuthentication',
+        'simplejwt_spa.authentications.SPAJWTAuthentication',
     )
 }
 
